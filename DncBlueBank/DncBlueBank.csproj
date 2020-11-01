@@ -38,10 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="README.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\components\AccountDeposit.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
