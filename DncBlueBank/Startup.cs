@@ -1,9 +1,11 @@
+using DncBlueBank.Infra;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace DncBlueBank
 {
@@ -21,6 +23,9 @@ namespace DncBlueBank
         {
 
             services.AddControllersWithViews();
+
+            DIConfiguration.SetStringConnection(GetStringConnection());
+            DIConfiguration.Mapper(services);
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -50,7 +55,7 @@ namespace DncBlueBank
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "api/{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
@@ -63,5 +68,14 @@ namespace DncBlueBank
                 }
             });
         }
+
+        private string GetStringConnection()
+        {
+            System.Data.SqlClient.SqlConnectionStringBuilder st = new System.Data.SqlClient.SqlConnectionStringBuilder(Configuration.GetConnectionString("local"));
+            string mdfPath = Path.Combine(Directory.GetCurrentDirectory(), "App_Data", "bluebankdb.mdf");
+            st.AttachDBFilename = mdfPath;
+            return st.ToString();
+        }
     }
+
 }

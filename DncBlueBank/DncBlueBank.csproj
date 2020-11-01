@@ -22,18 +22,41 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\AccountDeposit.tsx" />
     <None Remove="ClientApp\src\components\Accounts.tsx" />
+    <None Remove="ClientApp\src\components\AccountTranfer.tsx" />
+    <None Remove="ClientApp\src\components\AccountTransaction.tsx" />
+    <None Remove="ClientApp\src\components\AccountUpdate.tsx" />
+    <None Remove="ClientApp\src\components\AccountWithDraw.tsx" />
+    <None Remove="ClientApp\src\components\Alert.tsx" />
+    <None Remove="ClientApp\src\context\alertContext.tsx" />
     <None Remove="ClientApp\src\models\Account.ts" />
+    <None Remove="ClientApp\src\models\AccountTransaction.ts" />
+    <None Remove="ClientApp\src\models\ErrorMessage.ts" />
     <None Remove="ClientApp\src\tsconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\components\AccountDeposit.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\components\AccountTransaction.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\Accounts.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\AccountUpdate.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\AccountTranfer.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\components\AccountWithDraw.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\Alert.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\context\alertContext.tsx" />
     <TypeScriptCompile Include="ClientApp\src\models\Account.ts" />
+    <TypeScriptCompile Include="ClientApp\src\models\ErrorMessage.ts" />
+    <TypeScriptCompile Include="ClientApp\src\models\AccountTransaction.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AppData\" />
+    <ProjectReference Include="..\DncBlueBank.Infra\DncBlueBank.Infra.csproj" />
+    <ProjectReference Include="..\DncBlueBank.Model\DncBlueBank.Model.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

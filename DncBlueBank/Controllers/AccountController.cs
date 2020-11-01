@@ -2,30 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DncBlueBank.ApiView;
+using DncBlueBank.ApiViewModel;
+using DncBlueBank.Model;
+using DncBlueBank.Model.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DncBlueBank.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AccountController : ControllerBase
+    [Route("api/[controller]")]
+    public class AccountController : BaseController
     {
-        private static readonly IEnumerable<AccountViewModel> mock = new List<AccountViewModel>
+        private readonly IAccountService _accountSvc;
+
+        public AccountController(IAccountService accountSvc)
         {
-            new AccountViewModel { Agency = 1, Number = 1, Owner = "Diego", Balance = 2458.02M },
-            new AccountViewModel { Agency = 2, Number = 2, Owner = "Roberto", Balance = 24523.02M },
-            new AccountViewModel { Agency = 3, Number = 1, Owner = "Maria", Balance = 2458.01M },
-            new AccountViewModel { Agency = 5, Number = 2, Owner = "Tuane", Balance = 245343.0212M },
-        };
+            this._accountSvc = accountSvc;
+        }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<IEnumerable<AccountViewModel>> Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(mock);
+            try
+            {
+                return Ok(await _accountSvc.FindAllAsync());
+            }
+            catch (Exception error)
+            {
+                return BadRequest(new ErrorMessage(error.Message));
+            }
         }
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAccount(int id)
+        {
+            try
+            {
+                var account = await _accountSvc.FindAsync(id);
+
+                if (account == null)
+                    return NotFound();
+                else
+                    return Ok(account);
+            }
+            catch (Exception error)
+            {
+                return BadRequest(new ErrorMessage(error.Message));
+            }
+        }
+
+
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost()]
+        public async Task<IActionResult> Post([FromBody] AccountModel account)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(GetErrorModel());
+                else
+                {
+                    var inserted = await _accountSvc.InsertAsync(account);
+
+                    var result201 = new ObjectResult(inserted);
+                    result201.StatusCode = (int)System.Net.HttpStatusCode.Created;
+
+                    return result201;
+                }
+            }
+            catch (Exception error)
+            {
+                return BadRequest(new ErrorMessage(error.Message));
+            }
+        }
+
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut()]
+        public async Task<IActionResult> Put([FromBody] AccountModel account)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(GetErrorModel());
+                else
+                {
+                    var updated = await _accountSvc.UpdateAsync(account);
+
+                    if (updated)
+                        return Ok();
+                    else
+                        return BadRequest(new ErrorMessage("Account not updated"));
+                }
+            }
+            catch (Exception error)
+            {
+                return BadRequest(new ErrorMessage(error.Message));
+            }
+        }
+
     }
 }
