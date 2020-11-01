@@ -1,6 +1,7 @@
 ﻿export interface IAccountModel {
-    number: number;
+    id: number
     agency: string;
+    number: string;
+    balance: number;
     owner: string;
-    balance: string;
 }

@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DncBlueBank.Model.Interfaces.Repositories
+namespace DncBlueBank.Model.Interfaces.Services
 {
-    public interface IAccountRepository
+    public interface IAccountService
     {
         Task<AccountModel> FindAsync(int id);
-
-        Task<AccountModel> FindAsync(string agency, string number);
 
         Task<IEnumerable<AccountModel>> FindAllAsync();
 

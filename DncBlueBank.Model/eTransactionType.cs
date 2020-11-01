@@ -10,7 +10,5 @@ namespace DncBlueBank.Model
 
         WITHDRAW = 2,
 
-        TRANSFER = 3
-
     }
 }
