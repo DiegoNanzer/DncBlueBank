@@ -24,7 +24,10 @@ namespace DncBlueBank.Service
 
         public async Task<AccountModel> InsertAsync(AccountModel account)
         {
-            // Validation
+            var resultAccount = await _repo.FindAsync(account.Agency, account.Number);
+
+            if (resultAccount != null)
+                throw new BusinessException("Account already exist");
 
             return await _repo.InsertAsync(account);
         }
